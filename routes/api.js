@@ -1,19 +1,17 @@
 'use strict';
 
-const express = require('express');
 const helmet = require('helmet');
 
-const app = express();
-
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'"],
-      styleSrc: ["'self'"]
+module.exports = function (app) {
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'"]
+      }
     }
-  }
-}));
+  }));
 
 module.exports = function (app) {
 
@@ -21,5 +19,6 @@ module.exports = function (app) {
     .get(function (req, res){
       
     });
+}
     
 };
