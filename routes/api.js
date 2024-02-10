@@ -6,8 +6,9 @@ module.exports = function (app) {
   app.use(helmet({
     contentSecurityPolicy: {
       directives: {
-        scriptSrc: ["'self'"],
-        styleSrc: ["'self'"]
+        'default-src': ["'self'"],
+        'scriptSrc': ["'self'"],
+        'styleSrc': ["'self'"]
       }
     }
   }));
