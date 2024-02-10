@@ -1,7 +1,5 @@
 'use strict';
 
-import helmet from 'helmet';
-
 const express = require('express');
 const helmet = require('helmet');
 
