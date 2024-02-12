@@ -11,7 +11,15 @@ const runner            = require('./test-runner');
 
 const app = express();
 
-app.use(helmet());
+app.use(helmet({
+  contentSectPolicy: {
+    directives: {
+      'defaultSrc': ["'self'"],
+      'scriptSrc': ["'self'"],
+      'styleSrc': ["'self'"],
+    }
+  }
+}));
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
