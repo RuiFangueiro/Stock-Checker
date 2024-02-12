@@ -12,11 +12,11 @@ const runner            = require('./test-runner');
 const app = express();
 
 app.use(helmet({
-  contentSectPolicy: {
+  contentSecurityPolicy: {
     directives: {
-      'defaultSrc': ["'self'"],
-      'scriptSrc': ["'self'"],
-      'styleSrc': ["'self'"],
+      'default-src': ["'self'"],
+      'script-src': ["'self'"],
+      'style-src': ["'self'"],
     }
   }
 }));
