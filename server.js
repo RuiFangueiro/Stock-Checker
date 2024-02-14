@@ -5,7 +5,7 @@ const bodyParser  = require('body-parser');
 const cors        = require('cors');
 const helmet      = require('helmet');
 
-const apiRoutes         = require('./routes/api.js');
+const { setupRoutes }   = require('./routes/api.js');
 const fccTestingRoutes  = require('./routes/fcctesting.js');
 const runner            = require('./test-runner');
 
@@ -38,7 +38,7 @@ app.route('/')
 fccTestingRoutes(app);
 
 //Routing for API 
-apiRoutes(app);  
+setupRoutes(app);  
     
 //404 Not Found Middleware
 app.use(function(req, res, next) {
