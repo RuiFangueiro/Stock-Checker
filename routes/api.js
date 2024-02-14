@@ -63,7 +63,7 @@ module.exports = {
           if (err) {
             res.json({error: 'Stock not found'});
           } else {
-            res.json({data: {stock: stock, price: data.price, likes: data.likes}});
+            res.json({stockData: {stock: data.stock, price: data.price, likes: data.likes}});
           }
         });
       });
