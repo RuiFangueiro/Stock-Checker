@@ -44,6 +44,15 @@ async function getStockPrice(stocks, like, ip, callback) {
       }
       return {stock, price, likes};
     }));
+
+    if (stockData.length === 2) {
+      const rel_likes = stockData[0].likes - stockData[1].likes;
+      stockData[0].rel_likes = rel_likes;
+      stockData[1].rel_likes = -rel_likes;
+      delete stockData[0].likes;
+      delete stockData[1].likes;
+    }
+    
     callback(null, stockData);
   } catch (error) {
     callback(error, null);
@@ -65,7 +74,7 @@ module.exports = {
             if (err) {
               res.json({error: 'Stock not found'});
             } else {
-              res.json({stockData: data});
+              res.json({stockData: data.length === 1 ? data[0] : data});
           }
         });
       });
