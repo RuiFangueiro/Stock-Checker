@@ -13,12 +13,17 @@ suite('Functional Tests', function() {
       chai.request(server)
         .get(`/api/stock-prices?stock=${stock}`)
         .end(function(err, res) {
-          assert.equal(res.status, 200);
-          assert.property(res.body, 'stockData');
-          assert.equal(res.body.stockData.stock, stock);
-          assert.isNumber(res.body.stockData.price);
-          assert.isNumber(res.body.stockData.likes);
-          done();
+          if (err) {
+            console.error(err);
+            done(err);
+          } else {
+            assert.equal(res.status, 200);
+            assert.property(res.body, 'stockData');
+            assert.equal(res.body.stockData.stock, stock);
+            assert.isNumber(res.body.stockData.price);
+            assert.isNumber(res.body.stockData.likes);
+            done();
+          }
         });
     });
 
@@ -26,12 +31,17 @@ suite('Functional Tests', function() {
       chai.request(server)
         .get(`/api/stock-prices?stock=${stock}&like=true`)
         .end(function(err, res) {
-          assert.equal(res.status, 200);
-          assert.property(res.body, 'stockData');
-          assert.equal(res.body.stockData.stock, stock);
-          assert.isNumber(res.body.stockData.price);
-          assert.isNumber(res.body.stockData.likes);
-          done();
+          if (err) {
+            console.error(err);
+            done(err);
+          } else {  
+            assert.equal(res.status, 200);
+            assert.property(res.body, 'stockData');
+            assert.equal(res.body.stockData.stock, stock);
+            assert.isNumber(res.body.stockData.price);
+            assert.isNumber(res.body.stockData.likes);
+            done();
+          }
         });
     });
 
@@ -39,12 +49,17 @@ suite('Functional Tests', function() {
       chai.request(server)
         .get(`/api/stock-prices?stock=${stock}&like=true`)
         .end(function(err, res) {
-          assert.equal(res.status, 200);
-          assert.property(res.body, 'stockData');
-          assert.equal(res.body.stockData.stock, stock);
-          assert.isNumber(res.body.stockData.price);
-          assert.isNumber(res.body.stockData.likes);
-          done();
+          if (err) {
+            console.error(err);
+            done(err);
+          } else {
+            assert.equal(res.status, 200);
+            assert.property(res.body, 'stockData');
+            assert.equal(res.body.stockData.stock, stock);
+            assert.isNumber(res.body.stockData.price);
+            assert.isNumber(res.body.stockData.likes);
+            done();
+          }
         });
     });
 
@@ -52,16 +67,21 @@ suite('Functional Tests', function() {
       chai.request(server)
         .get(`/api/stock-prices?stock1=${stock}&stock2=MSFT`)
         .end(function(err, res) {
-          assert.equal(res.status, 200);
-          assert.property(res.body, 'stockData');
-          assert.isArray(res.body.stockData);
-          assert.equal(res.body.stockData[0].stock, stock);
-          assert.equal(res.body.stockData[1].stock, 'MSFT');
-          assert.isNumber(res.body.stockData[0].price);
-          assert.isNumber(res.body.stockData[1].price);
-          assert.isNumber(res.body.stockData[0].rel_likes);
-          assert.isNumber(res.body.stockData[1].rel_likes);
-          done();
+          if (err) {
+            console.error(err);
+            done(err);
+          } else {  
+            assert.equal(res.status, 200);
+            assert.property(res.body, 'stockData');
+            assert.isArray(res.body.stockData);
+            assert.equal(res.body.stockData[0].stock, stock);
+            assert.equal(res.body.stockData[1].stock, 'MSFT');
+            assert.isNumber(res.body.stockData[0].price);
+            assert.isNumber(res.body.stockData[1].price);
+            assert.isNumber(res.body.stockData[0].rel_likes);
+            assert.isNumber(res.body.stockData[1].rel_likes);
+            done();
+          }
         }); 
     });
 
@@ -69,16 +89,21 @@ suite('Functional Tests', function() {
       chai.request(server)
         .get(`/api/stock-prices?stock1=${stock}&stock2=MSFT&like=true`)
         .end(function(err, res) {
-          assert.equal(res.status, 200);
-          assert.property(res.body, 'stockData');
-          assert.isArray(res.body.stockData);
-          assert.equal(res.body.stockData[0].stock, stock);
-          assert.equal(res.body.stockData[1].stock, 'MSFT');
-          assert.isNumber(res.body.stockData[0].price);
-          assert.isNumber(res.body.stockData[1].price);
-          assert.isNumber(res.body.stockData[0].rel_likes);
-          assert.isNumber(res.body.stockData[1].rel_likes);
-          done();
+          if (err) {
+            console.error(err);
+            done(err);
+          } else {  
+            assert.equal(res.status, 200);
+            assert.property(res.body, 'stockData');
+            assert.isArray(res.body.stockData);
+            assert.equal(res.body.stockData[0].stock, stock);
+            assert.equal(res.body.stockData[1].stock, 'MSFT');
+            assert.isNumber(res.body.stockData[0].price);
+            assert.isNumber(res.body.stockData[1].price);
+            assert.isNumber(res.body.stockData[0].rel_likes);
+            assert.isNumber(res.body.stockData[1].rel_likes);
+            done();
+          }
         });
     });
   });
