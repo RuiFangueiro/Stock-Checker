@@ -86,9 +86,13 @@ async function getStockPrice(stocks, like, ip, callback) {
       delete stockData[1].stockData.likes;
     }
 
-    const SortedStockData = stockData.sort((a, b) => a.stockData.stock.localeCompare(b.stockData.stock));
+    const sortedStockData = stockData.sort((a, b) => a.stockData.stock.localeCompare(b.stockData.stock));
+
+    const innerStockData = sortedStockData.map(data => data.stockData);
+
+    const response = { stockData: innerStockData };
     
-    callback(null, stockData);
+    callback(null, response);
   } catch (error) {
     callback(error, null);
   }
