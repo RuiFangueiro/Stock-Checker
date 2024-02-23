@@ -122,7 +122,7 @@ module.exports = {
             if (err) {
               res.json({"StockData" : {"error" : "invalid symbol", "likes" : 0}});
             } else {
-              res.json(stocks.length === 1 ? data.stockData[0] : data);
+              res.json(stocks.length === 1 ? {"StockData" : data.stockData[0]} : data);
           }
         });
       });
