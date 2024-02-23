@@ -18,46 +18,90 @@ function anonymize(ip) {
   return hash.digest('hex').substring(0, 7);
 }
 
+async function seedStockData() {
+  const stocks = ['GOOG', 'MSFT', 'AAPL', 'AMZN', 'META'];
+
+  try {
+    for (const stock of stocks) {
+      // Make request to external API to get stock data
+      const response = await axios.get(`https://stock-price-checker-proxy.freecodecamp.rocks/v1/stock/${stock}/quote`);
+      const { data } = response;
+
+      // Create document for the stock and save it to MongoDB
+      const newStock = new Stock({
+        symbol: stock,
+        price: data.latestPrice,
+        likes: 0,
+        ips: []
+      });
+      await newStock.save();
+      console.log(`Stock data for ${stock} saved to MongoDB`);
+    }
+    console.log('Stock data seeding completed');
+  } catch (error) {
+    console.error('Error seeding stock data:', error);
+  }
+}
+
+seedStockData();
+
 async function getStockPrice(stocks, like, ip, callback) {
   try {
     const stockData = await Promise.all(stocks.map(async (stock) => {
-      const response = await axios.get(`https://stock-price-checker-proxy.freecodecamp.rocks/v1/stock/${stock}/quote`);
-      const price = response.data.latestPrice;
-      let likes = like ? 1 : 0;
-      if (like) {
-        const existingStock = await Stock.findOne({ symbol: stock });
-        if (existingStock) {
-          const existingIpIndex = existingStock.ips.indexOf(ip);
-          if (existingIpIndex === -1) {
-            existingStock.ips.push(ip);
-            existingStock.likes += 1;
-            await existingStock.save();
-          }
-        } else {
-          const newStock = new Stock({
-            symbol: stock,
-            ips: [ip],
-            likes: 1
-          });
-          await newStock.save();
+      let likes = 0;
+      const existingStock = await Stock.findOne({ symbol: stock });
+      if (existingStock) {
+        likes = existingStock.likes;
+        if (like && existingStock.ips.indexOf(ip) === -1) {
+          existingStock.ips.push(ip);
+          existingStock.likes += 1;
+          await existingStock.save();
         }
+      } else if (like) {
+        const newStock = new Stock({
+          symbol: stock,
+          ips: [ip],
+          likes: 1
+        });
+        await newStock.save();
+        likes = 1;
+      } 
+
+      try {
+        const response = await axios.get(`https://stock-price-checker-proxy.freecodecamp.rocks/v1/stock/${stock}/quote`);
+        console.log('Response for', stock, ':', response.data);
+        const price = response.data.latestPrice;
+        console.log('Stock:', stock, 'Price:', price, 'Likes:', likes);
+        return {"stockData": {"stock": stock, "price": price, "likes": likes}};
+      } catch (error) {
+        return {"error" : "invalid symbol", "likes" : likes};
       }
-      return {stock, price, likes};
     }));
 
     if (stockData.length === 2) {
-      const rel_likes = stockData[0].likes - stockData[1].likes;
-      stockData[0].rel_likes = rel_likes;
-      stockData[1].rel_likes = -rel_likes;
-      delete stockData[0].likes;
-      delete stockData[1].likes;
+      const rel_likes = stockData[0].stockData.likes - stockData[1].stockData.likes;
+      stockData[0].stockData.rel_likes = rel_likes;
+      stockData[1].stockData.rel_likes = -rel_likes;
+      delete stockData[0].stockData.likes;
+      delete stockData[1].stockData.likes;
     }
+
+    const SortedStockData = stockData.sort((a, b) => a.stockData.stock.localeCompare(b.stockData.stock));
     
     callback(null, stockData);
   } catch (error) {
     callback(error, null);
   }
 }
+
+getStockPrice(['GOOG'], false, '127.0.0.1', (err, data) => {
+  if (err) {
+    console.error('Error fetching stock data:', err);
+  } else {
+    console.log('Stock data:', data);
+  }
+});
+
 
 module.exports = {
   Stock: Stock,
@@ -72,9 +116,9 @@ module.exports = {
           const ip = anonymize(req.ip);
           getStockPrice(stocks, like, ip, (err, data) => {
             if (err) {
-              res.json({error: 'Stock not found'});
+              res.json({"StockData" : {"error" : "invalid symbol", "likes" : 0}});
             } else {
-              res.json({stockData: data.length === 1 ? data[0] : data});
+              res.json(stocks.length === 1 ? data[0] : data);
           }
         });
       });

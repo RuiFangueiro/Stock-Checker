@@ -1,5 +1,7 @@
 'use strict';
 require('dotenv').config();
+const {MongoClient} = require('mongodb');
+const mongoose = require('mongoose');
 const express     = require('express');
 const bodyParser  = require('body-parser');
 const cors        = require('cors');
@@ -8,6 +10,33 @@ const helmet      = require('helmet');
 const { setupRoutes }   = require('./routes/api.js');
 const fccTestingRoutes  = require('./routes/fcctesting.js');
 const runner            = require('./test-runner');
+const { ServerApiVersion } = require('mongodb');
+const uri = process.env.DB;
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverSelectionTimeoutMS: 30000, // 30 seconds
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+async function run() {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    await mongoose.connect(uri);
+
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } catch (error) {
+    console.error(error);
+  }
+}
+run().catch(console.dir);
+
 
 const app = express();
 
