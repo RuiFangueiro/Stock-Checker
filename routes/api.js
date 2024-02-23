@@ -120,9 +120,9 @@ module.exports = {
           const ip = anonymize(req.ip);
           getStockPrice(stocks, like, ip, (err, data) => {
             if (err) {
-              res.json({"StockData" : {"error" : "invalid symbol", "likes" : 0}});
+              res.json({"stockData" : {"error" : "invalid symbol", "likes" : 0}});
             } else {
-              res.json(stocks.length === 1 ? {"StockData" : data.stockData[0]} : data);
+              res.json(stocks.length === 1 ? {"stockData" : data.stockData[0]} : data);
           }
         });
       });

@@ -76,13 +76,17 @@ suite('Functional Tests', function() {
             done(err);
           } else {  
             assert.equal(res.status, 200);
-            assert.isArray(res.body);
-            const sortedStockData = res.body.sort((a, b) => a.stockData.stock.localeCompare(b.stockData.stock));
-            sortedStockData.forEach(stockData => {
-              assert.property(stockData, 'stockData');
-              assert.isNumber(stockData.stockData.price);
-              assert.isNumber(stockData.stockData.rel_likes);
-            });
+            assert.isArray(res.body.stockData);
+            res.body.stockData.forEach(data => {
+              assert.property(data, 'price');
+              assert.property(data, 'rel_likes');
+            if (data.price !== undefined) {
+              assert.isNumber(data.price);
+            }
+            if (data.rel_likes !== undefined) {
+              assert.isNumber(data.rel_likes);
+            }
+          });
             done();
           }
         }); 
@@ -98,13 +102,17 @@ suite('Functional Tests', function() {
             done(err);
           } else {  
             assert.equal(res.status, 200);
-            assert.isArray(res.body);
-            sortedStockData = res.body.sort((a, b) => a.stockData.stock.localeCompare(b.stockData.stock));
-            sortedStockData.forEach(stockData => {
-              assert.property(stockData, 'stockData');
-              assert.isNumber(stockData.stockData.price);
-              assert.isNumber(stockData.stockData.rel_likes);
-            });
+            assert.isArray(res.body.stockData);
+            res.body.stockData.forEach(data => {
+              assert.property(data, 'price');
+              assert.property(data, 'rel_likes');
+            if (data.price !== undefined) {
+              assert.isNumber(data.price);
+            }
+            if (data.rel_likes !== undefined) {
+              assert.isNumber(data.rel_likes);
+            }
+          });
             done();
           }
         });
